@@ -36,7 +36,7 @@ public class ArrayParameter extends Parameter {
 
     public ArrayParameter(final String name, final ArrayList<Parameter> values) {
         super(name, null);
-        this.values = new ArrayList<Parameter>(values);
+        this.values = values;
     }
 
     public ArrayList<Parameter> getValues() {
@@ -67,14 +67,18 @@ public class ArrayParameter extends Parameter {
             for (int i = 0; i < values.size(); i++) {
                 Parameter param = values.get(i);
                 if (encodeMode == Message.EncodeMode.VERBOSE) {
+                    String paramName = param.getName();
+                    if (paramName == null || paramName.length() == 0) {
+                        paramName = "" + i;
+                    }
                     if (param instanceof SingleParameter) {
                         JSONObject jsonObject = new JSONObject();
-                        jsonObject.put(param.getName(), param.getValue());
+                        jsonObject.put(paramName, param.getValue());
                         jsonArray.put(jsonObject);
                     } else if (param instanceof ArrayParameter) {
                         ArrayParameter arrayParam = (ArrayParameter) param;
                         JSONObject jsonObject = new JSONObject();
-                        jsonObject.put(param.getName(), arrayParam.toJSONArray(encodeMode));
+                        jsonObject.put(paramName, arrayParam.toJSONArray(encodeMode));
                         jsonArray.put(jsonObject);
                     }
                 } else {

@@ -38,6 +38,7 @@ public class Message {
     }
 
     public Message(final Parameter... parameters) {
+        this.name = null;
         this.parameters = parameters;
     }
 

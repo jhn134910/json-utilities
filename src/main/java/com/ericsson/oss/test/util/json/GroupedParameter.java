@@ -35,11 +35,11 @@ public class GroupedParameter extends SingleParameter {
 
     public GroupedParameter(final String name, final ArrayList<Parameter> values) {
         super(name, null);
-        this.values = new ArrayList<Parameter>(values);
+        this.values = values;
     }
 
     public ArrayList<Parameter> getValues() {
-        return new ArrayList<Parameter>(values);
+        return values;
     }
 
     public void add(final Parameter param) {
@@ -60,6 +60,7 @@ public class GroupedParameter extends SingleParameter {
     }
 
     public void setValues(Parameter[] params) {
+        values = new ArrayList<Parameter>();
         for (int i = 0; i < params.length; i++) {
             values.add(params[i]);
         }
@@ -81,11 +82,17 @@ public class GroupedParameter extends SingleParameter {
             objectGroup = new JSONObject();
             for (int i = 0; i < values.size(); i++) {
                 Parameter param = values.get(i);
+                String paramName = param.getName();
+                if (encodeMode == Message.EncodeMode.VERBOSE) {
+                    if (paramName == null || paramName.length() == 0) {
+                        paramName = "" + i;
+                    }
+                }
                 if (param instanceof SingleParameter) {
-                    objectGroup.put(param.getName(), param.getValue());
+                    objectGroup.put(paramName, param.getValue());
                 } else if (param instanceof ArrayParameter) {
                     ArrayParameter arrayParam = (ArrayParameter) param;
-                    objectGroup.put(param.getName(), arrayParam.toJSONArray(encodeMode));
+                    objectGroup.put(paramName, arrayParam.toJSONArray(encodeMode));
                 }
             }
         }
